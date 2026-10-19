@@ -1,0 +1,110 @@
+* {
+    box-sizing: border-box;
+}
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f2f5fa;
+    color: #222;
+}
+header {
+    background: #172554;
+    color: white;
+    text-align: center;
+    padding: 25px;
+}
+nav {
+    background: #1e3a8a;
+    padding: 15px;
+    text-align: center;
+}
+nav a {
+    color: white;
+    text-decoration: none;
+    margin: 0 15px;
+}
+main {
+    max-width: 900px;
+    margin: 35px auto;
+    padding: 20px;
+}
+.cards {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+.card {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    flex: 1;
+    min-width: 240px;
+    box-shadow: 0 2px 8px #0001;
+}
+.card a {
+    display: inline-block;
+    background: #1e40af;
+    color: white;
+    padding: 10px 14px;
+    text-decoration: none;
+    border-radius: 5px;
+}
+.status {
+    margin-top: 25px;
+    color: #166534;
+    font-weight: bold;
+}
+input {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+label {
+    font-weight: bold;
+}
+button {
+    background: #1e40af;
+    color: white;
+    padding: 10px 14px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 4px;
+}
+button:hover {
+    background: #172554;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+th,
+td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+    overflow-wrap: anywhere;
+}
+th {
+    background: #e8eefc;
+}
+td form {
+    display: inline;
+}
+td a {
+    margin-right: 8px;
+}
+
+select {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background: white;
+}
