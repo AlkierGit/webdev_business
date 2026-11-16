@@ -67,8 +67,12 @@ if (isset($_POST["update"])) {
     if ($id > 0 && $name !== "" && $developer_id > 0) {
         $stmt = $conn->prepare(
             "UPDATE projects
-             SET project_name = ?, description = ?, developer_id = ?, last_updated_by = ?
-             WHERE project_id = ?"
+ SET project_name = ?,
+     description = ?,
+     developer_id = ?,
+     last_updated_by = ?,
+     last_updated = CURRENT_TIMESTAMP
+ WHERE project_id = ?"
         );
         $stmt->execute([
             $name,
@@ -156,13 +160,32 @@ $stmt = $conn->query(
 );
 $developers = $stmt->fetchAll();
 
-// Get projects with developer names
-$stmt = $conn->query(
-    "SELECT p.*, d.developer_name
-     FROM projects p
-     JOIN developers d ON p.developer_id = d.developer_id
-     ORDER BY p.project_id DESC"
-);
+// Search projects
+$search = trim($_GET["search"] ?? "");
+
+if ($search !== "") {
+    $stmt = $conn->prepare(
+        "SELECT p.*, d.developer_name
+         FROM projects p
+         JOIN developers d ON p.developer_id = d.developer_id
+         WHERE p.project_name LIKE ?
+            OR p.description LIKE ?
+            OR d.developer_name LIKE ?
+         ORDER BY p.project_id DESC"
+    );
+
+    $keyword = "%" . $search . "%";
+
+    $stmt->execute([$keyword, $keyword, $keyword]);
+} else {
+    $stmt = $conn->query(
+        "SELECT p.*, d.developer_name
+         FROM projects p
+         JOIN developers d ON p.developer_id = d.developer_id
+         ORDER BY p.project_id DESC"
+    );
+}
+
 $projects = $stmt->fetchAll();
 ?>
 
@@ -233,16 +256,33 @@ $projects = $stmt->fetchAll();
     </form>
 
     <h2>Registered Projects</h2>
+    <form method="GET" action="projects.php" class="card">
+    <label>Search Project</label>
+
+    <input
+        type="text"
+        name="search"
+        placeholder="Search project or developer..."
+        value="<?= e($search) ?>"
+    >
+
+    <button type="submit">Search</button>
+    <a href="projects.php">Show All</a>
+</form>
 
     <div class="card">
         <table>
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Project</th>
-                    <th>Description</th>
-                    <th>Developer</th>
-                    <th>Actions</th>
+<th>Project</th>
+<th>Description</th>
+<th>Developer</th>
+<th>Date Added</th>
+<th>Added By</th>
+<th>Last Updated By</th>
+<th>Last Updated At</th>
+<th>Actions</th>
                 </tr>
             </thead>
 
@@ -250,10 +290,14 @@ $projects = $stmt->fetchAll();
                 <?php foreach ($projects as $row): ?>
                     <tr>
                         <td><?= e($row["project_id"]) ?></td>
-                        <td><?= e($row["project_name"]) ?></td>
-                        <td><?= e($row["description"]) ?></td>
-                        <td><?= e($row["developer_name"]) ?></td>
-                        <td>
+<td><?= e($row["project_name"]) ?></td>
+<td><?= e($row["description"]) ?></td>
+<td><?= e($row["developer_name"]) ?></td>
+<td><?= e($row["date_added"]) ?></td>
+<td><?= e($row["added_by"]) ?></td>
+<td><?= e($row["last_updated_by"]) ?></td>
+<td><?= e($row["last_updated"]) ?></td>
+<td>
                             <a href="projects.php?edit=<?= e($row["project_id"]) ?>">
                                 Edit
                             </a>
