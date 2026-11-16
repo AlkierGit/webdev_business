@@ -23,9 +23,10 @@ if (isset($_POST["add"])) {
     if ($name !== "" && $developer_id > 0) {
         $stmt = $conn->prepare(
             "INSERT INTO projects
-            (project_name, description, developer_id, added_by, last_ updated_by)
+            (project_name, description, developer_id, added_by, last_updated_by)
             VALUES (?, ?, ?, ?, ?)"
         );
+
         $stmt->execute([
             $name,
             $description,
@@ -41,6 +42,7 @@ if (isset($_POST["add"])) {
             (user_id, action, entity_type, record_id, details)
             VALUES (?, 'INSERT', 'project', ?, ?)"
         );
+
         $log->execute([
             $user_id,
             $record_id,
