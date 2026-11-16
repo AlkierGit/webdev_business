@@ -51,11 +51,14 @@ if (isset($_POST["update"])) {
     $user_id = $_SESSION["user_id"];
 
     if ($id > 0 && $name !== "" && $email !== "") {
-        $stmt = $conn->prepare(
-            "UPDATE developers
-             SET developer_name = ?, email = ?, updated_by = ?
-             WHERE developer_id = ?"
-        );
+       $stmt = $conn->prepare(
+   "UPDATE developers
+    SET developer_name = ?,
+        email = ?,
+        updated_by = ?
+    WHERE developer_id = ?"
+);
+$stmt->execute([$name, $email, $user_id, $id]);
         $stmt->execute([$name, $email, $user_id, $id]);
 
         $log = $conn->prepare(
@@ -73,6 +76,7 @@ if (isset($_POST["update"])) {
     header("Location: developers.php");
     exit;
 }
+
 
 
 // Delete a developer
@@ -127,14 +131,25 @@ if (isset($_GET["edit"])) {
     $editDeveloper = $stmt->fetch();
 }
 
-// Get all developers
-$stmt = $conn->query(
-    "SELECT * FROM developers ORDER BY developer_id DESC"
-);
+// Search developers
+$search = trim($_GET["search"] ?? "");
+if ($search !== "") {
+   $stmt = $conn->prepare(
+       "SELECT * FROM developers
+        WHERE developer_name LIKE ?
+        OR email LIKE ?
+        ORDER BY developer_id DESC"
+   );
+   $keyword = "%" . $search . "%";
+   $stmt->execute([$keyword, $keyword]);
+} else {
+   $stmt = $conn->query(
+       "SELECT * FROM developers ORDER BY developer_id DESC"
+   );
+}
 $developers = $stmt->fetchAll();
-
 function e($value) {
-    return htmlspecialchars((string)$value, ENT_QUOTES, "UTF-8");
+   return htmlspecialchars((string)$value, ENT_QUOTES, "UTF-8");
 }
 ?>
 
@@ -193,6 +208,16 @@ function e($value) {
     </form>
 
     <h2>Registered Developers</h2>
+    <form method="GET" action="developers.php" class="card">
+   <input
+       type="text"
+       name="search"
+       placeholder="Search developer name or email..."
+       value="<?= e($_GET["search"] ?? "") ?>"
+   >
+   <button type="submit">Search</button>
+   <a href="developers.php">Show All</a>
+</form>
 
     <div class="card">
         <table>
