@@ -53,13 +53,14 @@ if (isset($_POST["update"])) {
     if ($id > 0 && $name !== "" && $email !== "") {
        $stmt = $conn->prepare(
    "UPDATE developers
-    SET developer_name = ?,
-        email = ?,
-        updated_by = ?
-    WHERE developer_id = ?"
+ SET developer_name = ?,
+     email = ?,
+     updated_by = ?,
+     last_updated = CURRENT_TIMESTAMP
+ WHERE developer_id = ?"
 );
 $stmt->execute([$name, $email, $user_id, $id]);
-        $stmt->execute([$name, $email, $user_id, $id]);
+       
 
         $log = $conn->prepare(
             "INSERT INTO activity_logs
@@ -224,9 +225,13 @@ function e($value) {
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Actions</th>
+<th>Name</th>
+<th>Email</th>
+<th>Date Added</th>
+<th>Added By</th>
+<th>Last Updated By</th>
+<th>Last Updated At</th>
+<th>Actions</th>
                 </tr>
             </thead>
 
@@ -234,9 +239,13 @@ function e($value) {
                 <?php foreach ($developers as $row): ?>
                     <tr>
                         <td><?= e($row["developer_id"]) ?></td>
-                        <td><?= e($row["developer_name"]) ?></td>
-                        <td><?= e($row["email"]) ?></td>
-                        <td>
+<td><?= e($row["developer_name"]) ?></td>
+<td><?= e($row["email"]) ?></td>
+<td><?= e($row["date_added"]) ?></td>
+<td><?= e($row["added_by"]) ?></td>
+<td><?= e($row["updated_by"]) ?></td>
+<td><?= e($row["last_updated"]) ?></td>
+<td>
                             <a href="developers.php?edit=<?= e($row["developer_id"]) ?>">
                                 Edit
                             </a>
