@@ -23,7 +23,7 @@ if (isset($_POST["add"])) {
     if ($name !== "" && $developer_id > 0) {
         $stmt = $conn->prepare(
             "INSERT INTO projects
-            (project_name, description, developer_id, added_by, updated_by)
+            (project_name, description, developer_id, added_by, last_ updated_by)
             VALUES (?, ?, ?, ?, ?)"
         );
         $stmt->execute([
@@ -65,7 +65,7 @@ if (isset($_POST["update"])) {
     if ($id > 0 && $name !== "" && $developer_id > 0) {
         $stmt = $conn->prepare(
             "UPDATE projects
-             SET project_name = ?, description = ?, developer_id = ?, updated_by = ?
+             SET project_name = ?, description = ?, developer_id = ?, last_updated_by = ?
              WHERE project_id = ?"
         );
         $stmt->execute([
